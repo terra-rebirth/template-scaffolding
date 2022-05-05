@@ -90,7 +90,7 @@ describe("unzip files", () => {
   });
 
   afterAll(() => {
-    fs.rmdirSync("base-mock", { recursive: true });
-    fs.rmdirSync("folder-name", { recursive: true });
+    fs.rmSync("base-mock", { recursive: true, force: true });
+    fs.rmSync("folder-name", { recursive: true, force: true });
   });
 });

@@ -25,7 +25,7 @@ export default class FileWriter {
   private extractToTempFolder = (zip: AdmZip) => {
     const folderUrl = this?.folderUrl ? this.folderUrl : ".";
     if (fs.existsSync(this.TEMP_DIR)) {
-      fs.rmdirSync(this.TEMP_DIR, { recursive: true });
+      fs.rmSync(this.TEMP_DIR, { recursive: true, force: true });
     }
     fs.mkdirSync(this.TEMP_DIR);
     zip.extractAllTo(this.TEMP_DIR);
@@ -33,6 +33,6 @@ export default class FileWriter {
     const tempDirContent = fs.readdirSync(this.TEMP_DIR);
     const tempFolderUrl = `${this.TEMP_DIR}/${tempDirContent[0]}`;
     fs.renameSync(tempFolderUrl, folderUrl);
-    fs.rmdirSync(this.TEMP_DIR, { recursive: true });
+    fs.rmSync(this.TEMP_DIR, { recursive: true, force: true });
   };
 }
