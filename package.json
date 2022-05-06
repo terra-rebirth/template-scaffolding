@@ -9,6 +9,7 @@
     "build": "npx tsc",
     "test": "jest test",
     "lint": "eslint --ext .ts . --fix",
+    "prepack": "npm run build",
     "precommit": "lint-staged"
   },
   "lint-staged": {
