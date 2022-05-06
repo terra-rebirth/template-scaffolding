@@ -7,8 +7,8 @@ export class TemplateScaffolding {
   static from = async (options: TemplateScaffoldingOptions) => {
     const file = await new Repository(options.remoteUrl).getZip();
 
-    const parsedFile = new DataParser(options.replace).parse(file);
+    const parsedFile = new DataParser(options).parse(file);
 
-    new FileWriter(options.localOptions).write(parsedFile);
+    new FileWriter(options).write(parsedFile);
   };
 }
