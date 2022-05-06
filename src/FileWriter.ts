@@ -32,6 +32,7 @@ export default class FileWriter {
 
     const tempDirContent = fs.readdirSync(this.TEMP_DIR);
     const tempFolderUrl = `${this.TEMP_DIR}/${tempDirContent[0]}`;
+    fs.mkdirSync(folderUrl,{recursive: true});
     fs.renameSync(tempFolderUrl, folderUrl);
     fs.rmSync(this.TEMP_DIR, { recursive: true, force: true });
   };
