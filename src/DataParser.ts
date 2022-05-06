@@ -1,41 +1,43 @@
 import AdmZip from "adm-zip";
-import { ReplaceOptions } from "./models/TemplateScaffoldingOptions";
+import { TemplateScaffoldingOptions } from "./models/TemplateScaffoldingOptions";
 
 export default class DataParser {
-  options: ReplaceOptions;
+  options: TemplateScaffoldingOptions;
 
   prefix: string;
 
   suffix: string;
 
-  constructor(options: ReplaceOptions) {
+  constructor(options: TemplateScaffoldingOptions) {
     this.options = options;
-    this.prefix = options.prefix ? options.prefix : "{{";
-    this.suffix = options.suffix ? options.suffix : "}}";
+    this.prefix = options.replace?.prefix ? options.replace.prefix : "{{";
+    this.suffix = options.replace?.suffix ? options.replace.suffix : "}}";
   }
 
   parse = (zip: AdmZip): AdmZip => {
-    const entries = this.prepareEntries();
+    const templateTags = this.prepareTemplateTags();
 
     for (const zipEntry of zip.getEntries()) {
-      let text = zip.readAsText(zipEntry);
+      if (this.shouldReplaceTags(zipEntry.entryName)) {
+        let text = zip.readAsText(zipEntry);
 
-      if (text.includes(this.prefix)) {
-        for (const property in entries) {
-          const regex = new RegExp(property, "g");
-          const value = entries[property as keyof object];
+        if (text.includes(this.prefix)) {
+          for (const property in templateTags) {
+            const regex = new RegExp(property, "g");
+            const value = templateTags[property as keyof object];
 
-          text = text.replace(regex, value);
+            text = text.replace(regex, value);
+          }
         }
+        zip.updateFile(zipEntry, Buffer.from(text));
       }
-      zip.updateFile(zipEntry, Buffer.from(text));
     }
 
     return zip;
   };
 
-  private prepareEntries = (): object => {
-    const { entries } = this.options;
+  private prepareTemplateTags = (): object => {
+    const entries = this.options.replace?.entries;
     const parsedEntities: any = {};
 
     for (const key in entries) {
@@ -45,4 +47,12 @@ export default class DataParser {
 
     return parsedEntities;
   };
+
+  private shouldReplaceTags = (entryName: string): boolean => {
+    if (!!this.options?.subFolder) {
+      return entryName.includes(this.options.subFolder);
+    }
+
+    return true;
+  }
 }

@@ -1,18 +1,10 @@
 export interface LocalOptions {
   /**
-   * Path where data will be stored can be both relative
-   * or absolute, if path is not defined the data will be
-   * stored in '.' directory.
+   * Path where data will be stored. THis path can be 
+   * both relative or absolute, if the path is not 
+   * defined the data will be stored in '.' directory.
    */
   folderUrl?: string;
-
-  /**
-   * Sometimes the files compressed to zip are under a folder
-   * in case you want to move all these files to the folderUrl
-   * defined previously without any folder in between set
-   * this boolean to true.
-   */
-  toRootFolderUrl?: boolean;
 }
 
 export interface ReplaceOptions {
@@ -45,6 +37,15 @@ export interface TemplateScaffoldingOptions {
   remoteUrl: string;
 
   /**
+   * This option allows to use a sub folder from cloned 
+   * repository instead of directly the repository root 
+   * folder. Define the path from inside the repo.
+   * 
+   * If this value is not defined the full repo will be used.
+   */
+  subFolder?: string;
+
+  /**
    * How to store data locally
    */
   localOptions?: LocalOptions;
@@ -52,5 +53,5 @@ export interface TemplateScaffoldingOptions {
   /**
    * How to replace placeholders
    */
-  replace: ReplaceOptions;
+  replace?: ReplaceOptions;
 }

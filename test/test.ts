@@ -1,22 +1,25 @@
 import AdmZip from "adm-zip";
 import fs from "fs";
 import {
-  LocalOptions,
-  ReplaceOptions,
+  TemplateScaffoldingOptions,
 } from "../src/models/TemplateScaffoldingOptions";
 import DataParser from "../src/DataParser";
 import FileWriter from "../src/FileWriter";
+import path from 'path';
 
 describe("parse files", () => {
   test("with default template placeholder", async () => {
     // GIVEN
     const zip = new AdmZip("./test/mocks/base-mock.zip");
-    const options: ReplaceOptions = {
-      entries: {
-        "replace-me": "World",
-        "should-i-replace": "With whatever",
-      },
-    };
+    const options: TemplateScaffoldingOptions = {
+      remoteUrl: "",
+      replace: {
+        entries: {
+          "replace-me": "World",
+          "should-i-replace": "With whatever",
+        },
+      }
+    }
 
     // WHEN
     const parsedZip = await new DataParser(options).parse(zip);
@@ -34,14 +37,17 @@ describe("parse files", () => {
   test("with custom template placeholder", async () => {
     // GIVEN
     const zip = new AdmZip("./test/mocks/custom-placeholders-mock.zip");
-    const options: ReplaceOptions = {
-      prefix: "{{{",
-      suffix: "}}}",
-      entries: {
-        "replace-me": "World",
-        "should-i-replace": "With whatever",
-      },
-    };
+    const options: TemplateScaffoldingOptions = {
+      remoteUrl: "",
+      replace: {
+        prefix: "{{{",
+        suffix: "}}}",
+        entries: {
+          "replace-me": "World",
+          "should-i-replace": "With whatever",
+        },
+      }
+    }
 
     // WHEN
     const parsedZip = await new DataParser(options).parse(zip);
@@ -61,7 +67,9 @@ describe("unzip files", () => {
   test("with default name", async () => {
     // GIVEN
     const zip = new AdmZip("./test/mocks/base-mock.zip");
-    const options: LocalOptions = {};
+    const options: TemplateScaffoldingOptions = { 
+      remoteUrl: ""
+    };
 
     // WHEN
     await new FileWriter(options).write(zip);
@@ -75,9 +83,9 @@ describe("unzip files", () => {
   test("with default name", async () => {
     // GIVEN
     const zip = new AdmZip("./test/mocks/base-mock.zip");
-    const options: LocalOptions = {
-      folderUrl: "folder-name",
-      toRootFolderUrl: true,
+    const options: TemplateScaffoldingOptions = { 
+      remoteUrl: "",
+      subFolder: "folder-name"
     };
 
     // WHEN
@@ -90,7 +98,8 @@ describe("unzip files", () => {
   });
 
   afterAll(() => {
-    fs.rmSync("base-mock", { recursive: true, force: true });
-    fs.rmSync("folder-name", { recursive: true, force: true });
+    console.log(__dirname)
+    fs.rmSync(path.join("src", "base-mock"), { recursive: true, force: true });
+    fs.rmSync(path.join("folder-name"), { recursive: true, force: true });
   });
 });

@@ -7,7 +7,7 @@
   "scripts": {
     "start": "npx tsc -w",
     "build": "npx tsc",
-    "test": "jest",
+    "test": "jest test",
     "lint": "eslint --ext .ts . --fix",
     "precommit": "lint-staged"
   },
