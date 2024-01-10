@@ -1,5 +1,5 @@
 {
-  "name": "@terra-money/template-scaffolding",
+  "name": "@terra-rebirth/template-scaffolding",
   "version": "1.0.1",
   "description": "Library used to clone repositories and replace templated tags with input data",
   "main": "dist/index.js",
